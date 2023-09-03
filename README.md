@@ -9,15 +9,11 @@
 
 ---
 
-<aside>
-🖥️ Port scanning is a critical first step in cybersecurity assessments. It helps identify open ports on a target system, revealing which services are running. Ports are essential for communication between computers, and knowing which ports are open is crucial for planning security measures.
+>🖥️ Port scanning is a critical first step in cybersecurity assessments. It helps identify open ports on a target system, revealing which services are running. Ports are essential for communication between computers, and knowing which ports are open is crucial for planning security measures.
 
-</aside>
 
-<aside>
-🛰️ Nmap is a powerful network scanning tool used for discovering open ports, services, and vulnerabilities on target systems. It's a fundamental tool for network security assessments and reconnaissance.
+>🛰️ Nmap is a powerful network scanning tool used for discovering open ports, services, and vulnerabilities on target systems. It's a fundamental tool for network security assessments and reconnaissance.
 
-</aside>
 
 ---
 
