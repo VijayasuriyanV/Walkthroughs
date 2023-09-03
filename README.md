@@ -4,7 +4,7 @@
 
 # By  V1J4Y4_5UR1Y4N V
 
-         **THM NMAP Room Link → ([https://tryhackme.com/room/furthernmap](https://tryhackme.com/room/furthernmap))**
+**THM NMAP Room Link → [https://tryhackme.com/room/furthernmap](https://tryhackme.com/room/furthernmap)**
 
 ---
 
