@@ -46,7 +46,7 @@
 > 
 > How many of these are available on any network-enabled computer?
 > 
-> ```coffeescript
+> ```Plain Text
 > 65535
 > ```
 > 
@@ -241,7 +241,7 @@ To understand TCP Connect scans `(-sT)`, you need to be familiar with the *TCP t
 > Which RFC defines the appropriate behaviour for the TCP protocol?
 > 
 > 
-> ```coffeescript
+> ```Plain Text
 > RFC 9293
 > ```
 > 
@@ -249,7 +249,7 @@ To understand TCP Connect scans `(-sT)`, you need to be familiar with the *TCP t
 > 
 > If a port is closed, which flag should the server send back to indicate this?
 > 
-> ```coffeescript
+> ```Plain Text
 > RST
 > ```
 > 
@@ -283,13 +283,13 @@ For this reason, SYN scans are the default scans used by Nmap *if run with sud
 > There are two other names for a SYN scan, what are they?
 > 
 > 
-> ```coffeescript
+> ```Plain Text
 > Half-Open, Stealth
 > ```
 > 
 > Can Nmap use a SYN scan without Sudo permissions (Y/N)?
 > 
-> ```coffeescript
+> ```Plain Text
 > N
 > ```
 > 
@@ -309,13 +309,13 @@ Scanning with  `nmap -sU --top-ports 20 <target>`. Will scan the top 20 most c
 > If a UDP port doesn't respond to an Nmap scan, what will it be marked as?
 > 
 > 
-> ```coffeescript
+> ```Plain Text
 > open|filtered
 > ```
 > 
 > When a UDP port is closed, by convention the target should send back a "port unreachable" message. Which protocol would it use to do so?
 > 
-> ```coffeescript
+> ```Plain Text
 > ICMP
 > ```
 > 
@@ -346,19 +346,19 @@ NULL, FIN and Xmas TCP port scans are less commonly used than any of the other
 > Which of the three shown scan types uses the URG flag?
 > 
 > 
-> ```coffeescript
+> ```Plain Text
 > Xmas
 > ```
 > 
 > Why are NULL, FIN and Xmas scans generally used?
 > 
-> ```coffeescript
+> ```Plain Text
 > firewall evasion
 > ```
 > 
 > Which common OS may respond to a NULL, FIN or Xmas scan with a RST for every port?
 > 
-> ```coffeescript
+> ```Plain Text
 > Microsoft Windows
 > ```
 > 
@@ -378,7 +378,7 @@ On first connection to a target network in a black box assignment, our first obj
 > How would you perform a ping sweep on the 172.16.x.x network (Netmask: 255.255.0.0) using Nmap? (CIDR notation)
 > 
 > 
-> ```coffeescript
+> ```Plain Text
 > nmap -sn 172.16.0.0/16
 > ```
 > 
@@ -411,13 +411,13 @@ The **N**map **S**cripting **E**ngine (**NSE**) is an incredibly powerful add
 > What language are NSE scripts written in?
 > 
 > 
-> ```coffeescript
+> ```Plain Text
 > lua
 > ```
 > 
 > Which category of scripts would be a *very* bad idea to run in a production environment?
 > 
-> ```coffeescript
+> ```Plain Text
 > intrusive
 > ```
 > 
@@ -447,7 +447,7 @@ For example:`nmap -p 80 --script http-put --script-args http-put.url='/dav/shell
 > What optional argument can the `ftp-anon.nse` script take?
 > 
 > 
-> ```coffeescript
+> ```Plain Text
 > maxlist
 > ```
 > 
@@ -494,13 +494,13 @@ We mentioned previously that the Nmap website contains a list of scripts, so, 
 > Search for "smb" scripts in the `/usr/share/nmap/scripts/` directory using either of the demonstrated methods.What is the filename of the script which determines the underlying OS of the SMB server?
 > 
 > 
-> ```coffeescript
+> ```Plain Text
 > **smb-os-discovery.nse**
 > ```
 > 
 > Read through this script. What does it depend on?
 > 
-> ```coffeescript
+> ```Plain Text
 > **smb-brute**
 > ```
 > 
@@ -522,13 +522,13 @@ The following switches are of particular note:
 
 Which simple (and frequently relied upon) protocol is often blocked, requiring the use of the `-Pn` switch?
 
-```coffeescript
+```Plain Text
 ICMP
 ```
 
 **[Research]** Which Nmap switch allows you to append an arbitrary length of random data to the end of packets?
 
-```coffeescript
+```Plain Text
 --data-lenght
 ```
 
@@ -545,7 +545,7 @@ ICMP
 > 
 > ![Untitled](img/Untitled%203.png)
 > 
-> ```coffeescript
+> ```Plain Text
 > N
 > ```
 > 
@@ -553,7 +553,7 @@ ICMP
 > 
 > ![Untitled](img/Untitled%204.png)
 > 
-> ```coffeescript
+> ```Plain Text
 > 999
 > ```
 > 
@@ -561,7 +561,7 @@ ICMP
 > 
 > **Note:** The answer will be in your scan results. Think carefully about which switches to use -- and read the hint before asking for help!
 > 
-> ```coffeescript
+> ```Plain Text
 > No response
 > ```
 > 
@@ -571,7 +571,7 @@ ICMP
 > 
 > ![Untitled](img/Untitled%205.png)
 > 
-> ```coffeescript
+> ```Plain Text
 > 5
 > ```
 > 
@@ -579,7 +579,7 @@ ICMP
 > 
 > ![Untitled](img/Untitled%206.png)
 > 
-> ```coffeescript
+> ```Plain Text
 > Y
 > ```
 > 
