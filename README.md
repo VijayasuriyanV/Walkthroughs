@@ -2,7 +2,6 @@
 
 ![https://nmap.org/images/sitelogo.png](https://nmap.org/images/sitelogo.png)
 
-# By  V1J4Y4_5UR1Y4N V
 
 **→ [THM NMAP ROOM LINK](https://tryhackme.com/room/furthernmap)**
 
@@ -592,7 +591,5 @@ ICMP
 
 We have successfully completed the NMAP room
 
-<aside>
-💡 For further details about NMAP  you can refer this [Docs](https://nmap.org/book/)
+💡 For further details about NMAP, you can refer to the [Docs](https://nmap.org/book/).
 
-</aside>
