@@ -1,0 +1,688 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Nmap Walkthrough</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+    margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-interactiveBlue { background-color: rgba(35, 131, 226, .07); }
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-translucentGray { background-color: rgba(255, 255, 255, 0.0375); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="0eda9f9e-bb54-4795-9cd4-1ce63e5e3093" class="page sans"><header><h1 class="page-title">Nmap Walkthrough</h1><p class="page-description"></p></header><div class="page-body"><figure id="c6d03168-ba86-47d1-ae17-ce2bdae056f8" class="image"><a href="https://nmap.org/images/sitelogo.png"><img style="width:240px" src="https://nmap.org/images/sitelogo.png"/></a></figure><h1 id="d7004fe2-95c5-4953-b6f0-b168bbfcbb8d" class="">                                                            By  <mark class="highlight-red">V1J4Y4_5UR1Y4N V</mark></h1><p id="ee68e11e-909b-47e3-babb-793e3caa7c9c" class="">         <strong>THM NMAP Room Link → (</strong><strong><a href="https://tryhackme.com/room/furthernmap">https://tryhackme.com/room/furthernmap</a></strong><strong>)</strong></p><hr id="fd9e0831-cd94-48d4-85ad-e058029c039d"/><hr id="84b5e9c4-189d-446c-900f-c6cb13dab792"/><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="b614ce17-5064-44cc-a439-61a9125975cb"><div style="font-size:1.5em"><span class="icon">🖥️</span></div><div style="width:100%">Port scanning is a critical first step in cybersecurity assessments. It helps identify open ports on a target system, revealing which services are running. Ports are essential for communication between computers, and knowing which ports are open is crucial for planning security measures. </div></figure><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="a25a7d57-c08a-4570-b124-3b5e2dda277d"><div style="font-size:1.5em"><span class="icon">🛰️</span></div><div style="width:100%">Nmap is a powerful network scanning tool used for discovering open ports, services, and vulnerabilities on target systems. It&#x27;s a fundamental tool for network security assessments and reconnaissance.</div></figure><hr id="cec4a657-4bce-4ff1-a62b-cb330ccf2a8e"/><h2 id="66ed5e39-6b3f-4799-837b-f0950bbfabd5" class="">Task 1 → Deploy</h2><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="3ab4083b-0269-4356-bb87-25da71b06ce1"><div style="font-size:1.5em"><img class="icon" src="https://www.notion.so/icons/code_purple.svg"/></div><div style="width:100%">                Deploying the Machine and either connect with OpenVPN or use AttackBox .</div></figure><hr id="b99eaa99-cfe7-4174-a75f-fe226d4c83da"/><hr id="603f1c68-8314-4364-93bf-f56deb465939"/><h2 id="67c9e7ad-f3f1-4596-b006-e4336bc1b94c" class="">Task 2 → Introduction</h2><h3 id="72ab7038-d81f-42b2-866e-6048501bc6b3" class=""><strong><span style="border-bottom:0.05em solid">Questions</span></strong></h3><blockquote id="0e8950fb-570c-44c5-973d-f04ab214b8d5" class="">What networking constructs are used to direct traffic to the right application on a server?<pre id="2934ff33-42b5-4e78-9509-58386fef155c" class="code"><code>Ports</code></pre><p id="75227a49-fcbc-4656-8b09-b91d11dec452" class="">How many of these are available on any network-enabled computer?</p><pre id="9b7068e6-b7d1-4792-a575-785a51214c7c" class="code"><code>65535</code></pre><p id="2eb489ed-1fc5-42ed-a097-5a80c7a166b1" class=""><strong>[Research]</strong> How many of these are considered &quot;well-known&quot;? (These are the &quot;standard&quot; numbers mentioned in the task)</p><pre id="be98cce0-b9c9-4fe5-bfcb-a62db2db1ad6" class="code"><code>1024</code></pre></blockquote><hr id="1e037184-699b-4d5e-8e34-c703a18d6fc3"/><hr id="1c9393e3-1757-4b41-86b6-c97da65692e6"/><h2 id="d569896f-9e63-4294-9b25-9c43f4cb2239" class="">Task 3 → Nmap Switches</h2><h3 id="c7957500-2d6a-4389-a559-94bcbee6bbce" class="">Questions</h3><blockquote id="2be0842f-1a2e-4806-861a-f7874215d6df" class="">What is the first switch listed in the help menu for a &#x27;Syn Scan&#x27; (more on this later!)?<pre id="1d39518e-01cd-4819-bfab-2ade78e45360" class="code"><code>-sS</code></pre><p id="1350dff9-2a68-4187-9067-82786bd8319c" class="">Which switch would you use for a &quot;UDP scan&quot;?</p><pre id="a148e1a5-6f21-4d49-8c76-c8fc6b853fcf" class="code"><code>-sU</code></pre><p id="0d683e06-2cf5-4f20-8780-749772a109f9" class="">If you wanted to detect which operating system the target is running on, which switch would you use?</p><pre id="a7a311c5-e792-4551-8302-995e7812184a" class="code"><code>-O</code></pre><p id="b3aeade5-f12e-433c-8368-b8a1e7e2b461" class="">4.Nmap provides a switch to detect the version of the services running on the target. What is this switch?</p><pre id="47acc44f-1cb0-4071-a6ff-ec12bdfa8bdc" class="code"><code>-sV</code></pre><p id="df50f029-ab6f-4308-a2c9-f97a968d59f0" class="">The default output provided by nmap often does not provide enough information for a pentester. How would you increase the verbosity?</p><pre id="6a2d1f3a-6f71-4f17-ba5d-dfff72348900" class="code"><code>-v</code></pre><blockquote id="81566a99-9209-4bb6-b25e-89a5399bea9a" class="">Verbosity level one is good, but verbosity level two is better! How would you set the verbosity level to two?<p id="da677b1c-9472-4833-b400-018640369f51" class="">(<strong>Note</strong>: it&#x27;s highly advisable to always use <em>at least </em>this option)</p><pre id="7ccd123f-c98b-47d5-8b76-491d9a0a703a" class="code"><code>-vv</code></pre></blockquote><p id="ab1445a9-a210-4aff-a9db-a310601001f5" class="">
+</p><p id="63563d3f-3de4-49a6-b679-f4822d11ac71" class="">We should always save the output of our scans -- this means that we only need to run the scan once (reducing network traffic and thus chance of detection), and gives us a reference to use when writing reports for clients.</p><p id="b8b7860b-a302-45bc-a2d6-2396b1bb72b8" class="">
+</p><p id="eeadde4d-6bd7-4e10-97d4-4c229f8a4d5f" class="">What switch would you use to save the nmap results in three major formats?</p><pre id="093ecd57-a550-459f-b5d7-43c74510b824" class="code"><code>-oA</code></pre><p id="027ad589-6aa4-4fc3-8220-6982b02c0b5a" class="">What switch would you use to save the nmap results in a &quot;normal&quot; format?</p><pre id="44b4de22-0cd8-4048-8adb-679d5e255591" class="code"><code>-oN</code></pre><p id="6e751a33-1e2e-4091-983f-ffbceee3e453" class="">A very useful output format: how would you save results in a &quot;grepable&quot; format?</p><pre id="2b205509-37a4-4bcc-961a-38b07cb9a8be" class="code"><code>-oG</code></pre><p id="bd443888-d451-432a-b9c1-907506379cc6" class="">
+</p><p id="46087c8a-e7a8-419b-9a5b-13f17ed975df" class="">Sometimes the results we&#x27;re getting just aren&#x27;t enough. If we don&#x27;t care about how loud we are, we can enable &quot;aggressive&quot; mode. This is a shorthand switch that activates service detection, operating system detection, a traceroute and common script scanning.</p><p id="71a4675f-4a8e-4468-ba36-c93b49f1c1f8" class="">How would you activate this setting?</p><pre id="9ba28ddd-a874-49d9-8d09-ae9904d80e9e" class="code"><code>-A</code></pre><p id="a3553a3e-8d79-43be-a457-672e38daf255" class="">
+</p><p id="1c9d8f7b-64cf-4b7b-b9c1-63328bf1060b" class=""><code>Nmap </code>offers five levels of &quot;timing&quot; template. These are essentially used to increase the speed your scan runs at. Be careful though: higher speeds are noisier, and can incur errors!</p><p id="cd2834f9-229b-49f8-aac9-426165075586" class="">How would you set the timing template to level 5?</p><pre id="0b602d77-24bb-49c7-9383-0fde4536ee3c" class="code"><code>-T5</code></pre><p id="bb1276aa-7ed1-461f-bb06-8a5cd3b07a8d" class="">
+</p><p id="d7a478e7-0e35-42a2-b339-9460ed56342f" class="">We can also choose which port(s) to scan.</p><p id="fe65de0a-369c-4724-ac44-31b1fb1cef04" class="">How would you tell nmap to only scan port 80?</p><pre id="4402eaa6-aabf-438b-b99d-4f7f3244e7ce" class="code"><code>-p 80</code></pre><p id="b5dcf0a1-5f09-4075-9ad7-adda40d66b3f" class="">How would you tell nmap to scan ports 1000-1500?</p><pre id="86aefa61-b94a-4622-a436-bb3663684742" class="code"><code>-p 1000-1500</code></pre><p id="b060ec6f-4511-4211-a116-4cd707140e96" class="">
+</p><p id="7e59263f-53a2-4cac-bb32-a09f57ff9ae1" class="">A very useful option that should not be ignored:</p><p id="0ebb5788-4b71-4fd6-aa6c-fdd9bff57665" class="">How would you tell nmap to scan <em>all</em> ports?</p><pre id="75e5c220-400d-4af9-8605-ba3bb17631ab" class="code"><code>-p-</code></pre><p id="96f0e4a6-d095-435e-9322-05f1d8aebe98" class="">How would you activate a script from the nmap scripting library (lots more on this later!)?</p><pre id="a33ea6b5-bb37-4dd9-93ac-fb2968c10a89" class="code"><code>--script</code></pre><p id="f02becf7-e018-445c-b347-685a98079051" class="">How would you activate all of the scripts in the &quot;vuln&quot; category?</p><pre id="95e378f9-b0d5-4049-a4c2-861b24531e3c" class="code"><code>--script=vuln</code></pre></blockquote><hr id="1e8240a9-db28-446b-b41a-d4928dc2a33a"/><hr id="0953a59d-e9e6-484f-b6ce-e0aa6e830f66"/><h2 id="666ef231-d91a-4b43-820b-6b78e6debd85" class="">Task 4 → <mark class="highlight-teal">Scan Types</mark><mark class="highlight-default">  Overview</mark></h2><p id="20f9ab42-f213-4dcb-8c73-e50b46f93b8f" class="">When port scanning with Nmap, there are three basic scan types. These are:</p><ul id="53b2b14f-e52a-44d1-8c64-d54c695ec1ce" class="bulleted-list"><li style="list-style-type:disc">TCP Connect Scans (<code>sT</code>)</li></ul><ul id="3390ea8c-ca87-42a9-b423-5608aec2821a" class="bulleted-list"><li style="list-style-type:disc">SYN &quot;Half-open&quot; Scans (<code>sS</code>)</li></ul><ul id="470c1a5a-7318-4cb8-9d28-bef184ce9eaa" class="bulleted-list"><li style="list-style-type:disc">UDP Scans (<code>sU</code>)</li></ul><p id="b0e45677-e2ad-45f0-8797-095fbc7d1e43" class="">Additionally there are several less common port scan types, some of which we will also cover (albeit in less detail). These are:</p><ul id="1bd6006e-9c32-49ca-88f8-9246b760f93d" class="bulleted-list"><li style="list-style-type:disc">TCP Null Scans (<code>sN</code>)</li></ul><ul id="8b28ba93-e5da-4354-93cd-9e173505305e" class="bulleted-list"><li style="list-style-type:disc">TCP FIN Scans (<code>sF</code>)</li></ul><ul id="d88a7fe4-8cf2-40bd-ab06-95be63300182" class="bulleted-list"><li style="list-style-type:disc">TCP Xmas Scans (<code>sX</code>)</li></ul><p id="fb28e337-fb8b-4587-9ee6-cc46fbdb1f6e" class="">Most of these scans (excluding UDP scans) serve similar purposes but differ in their operation. While one of the first three scans is usually preferable, remember that other types of scans are available.</p><p id="c77a8d0c-f379-46e3-a4fe-9336d26f7e86" class="">In terms of network scanning, we will also look briefly at ICMP (or &quot;ping&quot;) scanning.</p><hr id="52335c90-2267-422c-b154-6015c26dc6e0"/><hr id="b9dd2539-4229-4ac1-9443-52402f0065ad"/><h2 id="0b4289bc-f01b-4a15-9aa8-24daa6da483e" class="">Task 5 → <mark class="highlight-teal">Scan Types</mark><mark class="highlight-default">  TCP Connect Scans</mark></h2><p id="10a56076-93a1-4db0-a8d5-149127fabfad" class=""><mark class="highlight-default">To understand TCP Connect scans </mark><code><mark class="highlight-default">(-sT)</mark></code><mark class="highlight-default">, you need to be familiar with the </mark><em><mark class="highlight-default">TCP three-way handshake.</mark></em></p><blockquote id="bd5d7ec3-207c-47f2-b196-6cb0fd79ae84" class="">The three-way handshake has three stages:<ol type="1" id="26b60ba7-dc8b-4437-9c1a-edfd0cbd41c3" class="numbered-list" start="1"><li>Attacking machine sends TCP request with SYN flag to target server.</li></ol><ol type="1" id="f75120fb-763d-49ef-b8b3-e96785df52ae" class="numbered-list" start="2"><li>Server responds with TCP packet containing SYN and ACK flags.</li></ol><ol type="1" id="801bc941-5883-481d-a309-809e8f39a3b4" class="numbered-list" start="3"><li>Our machine completes handshake by sending TCP request with ACK flag set.<figure id="65690afc-1c4b-4000-a4d9-c206b71c1a0c" class="image" style="text-align:center"><a href="img/image-2.png"><img style="width:336px" src="img/image-2.png"/></a></figure></li></ol><p id="927feecc-8955-42eb-9ab9-a6af5d460da9" class="">TCP/IP networking has a basic principle and it relates to Nmap. A TCP Connect scan connects to every target port one by one and checks whether the service is open by the response it receives.</p><hr id="42307a7e-8df5-4266-8511-d48d3fa6b310"/><p id="279ed5be-87be-45a3-a718-d2d1e17581cd" class="">There is a third possibility.</p><blockquote id="e7d4bf2a-d517-49fd-94df-a11ee2c4c02f" class="">What if the port is open, but hidden behind a firewall?</blockquote><p id="173dc9b7-aeec-4dfb-b408-ae775473ff8a" class="">Many firewalls are configured to simply <strong>drop</strong> incoming packets. Nmap sends a TCP SYN request, and receives nothing back. This indicates that the port is being protected by a firewall and thus the port is considered to be <em>filtered</em>.</p><p id="a77f2b2b-53ce-4a51-860d-c51a775b767a" class="">That said, it is very easy to configure a firewall to respond with a <span style="border-bottom:0.05em solid"><em>RST TCP</em></span> packet. </p><p id="313dfa12-fbd5-4861-a134-32367811e408" class="">For example, in IP tables for Linux, a simple version of the command would be as follows:</p><p id="69e99e2a-7806-43cc-8aef-bb75cee3e4f6" class=""><code>iptables -I INPUT -p tcp --dport &lt;port&gt; -j REJECT --reject-with tcp-reset</code></p><p id="0e696e7c-1a83-452e-80d6-01b5d8ab794e" class="">This can make it extremely difficult (if not impossible) to get an accurate reading of the target(s).</p></blockquote><h3 id="2075289a-5ba3-4d1a-997a-a3a654e8d790" class="">Questions:</h3><blockquote id="8a64ca03-a622-40f3-8362-6433fbfae695" class="">Which RFC defines the appropriate behaviour for the TCP protocol?<pre id="bd120445-143c-4406-9772-deeba323f1ca" class="code"><code>RFC 9293</code></pre><p id="47ed69c0-812d-44cf-96e0-2f1572c161b1" class="">Hint</p><p id="d03c691e-fe05-46c4-a96f-8c4f45c422a3" class="">If a port is closed, which flag should the server send back to indicate this?</p><pre id="d7f6cfdf-283a-418a-aaf9-3d120c3a228c" class="code"><code>RST</code></pre></blockquote><hr id="97db31d4-2947-4d1b-aac4-2cdd3e764afc"/><hr id="1b0033e1-74fc-4277-96e7-8f11aa503604"/><h2 id="59661e10-b027-4cae-9702-7a242e0db5e2" class="">Task 6 → <mark class="highlight-teal">Scan Types</mark> SYN Scans</h2><p id="5d69e5ff-4da6-4a20-8dbf-8ca9a98a4767" class="">As with TCP scans, SYN scans (<code>-sS</code>) are used to scan the TCP port-range of a target or targets; however, the two scan types work slightly differently. SYN scans are sometimes referred to as &quot;<em>Half-open&quot; </em>scans, or <em>&quot;Stealth&quot;</em> scans.</p><p id="e575fc73-cfd9-43c6-9db9-5763f64e101c" class="">Where TCP scans perform a full three-way handshake with the target, SYN scans sends back a RST TCP packet after receiving a SYN/ACK from the server (this prevents the server from repeatedly trying to make the request).<div class="indented"><hr id="5cf8809c-b0ca-4a35-a703-179392c3f18a"/><p id="f9215d17-8f86-4764-b817-fa1433c7d01a" class=""><strong>Disadvantages to SYN scans</strong>, namely:<div class="indented"><ul id="a73ecb2b-e8b8-401a-a5c2-d1f97659fc13" class="bulleted-list"><li style="list-style-type:disc">They require <code><em>sudo </em></code>permissions in order to work correctly in Linux. This is because SYN scans require the ability to create raw packets (as opposed to the full TCP handshake), which is a privilege only the root user has by default.<p id="edd5e734-7ae6-4c4c-aac0-f13a043757bb" class="">[1]</p></li></ul><ul id="e6e84abe-968a-4708-a2f1-27af849dd9a1" class="bulleted-list"><li style="list-style-type:disc">Unstable services are sometimes brought down by SYN scans, which could prove problematic if a client has provided a production environment for the test.</li></ul><p id="c7d4501a-16cd-43cd-9f82-abcbb44b7bf3" class="">All in all, the pros outweigh the cons.</p><p id="d1f87fba-e3a0-469a-aadd-ffe71a62bbfd" class="">For this reason, SYN scans are the default scans used by Nmap <em>if run with sudo permissions</em>. If run <strong>without</strong> <code><em>sudo </em></code>permissions, Nmap defaults to the TCP Connect scan we saw in the previous task.</p></div></p></div></p><h3 id="3396cccf-4d15-4491-a2cc-6c0f895b7d65" class="">Questions</h3><blockquote id="2301d899-0899-4084-b403-123d181baf79" class="">There are two other names for a SYN scan, what are they?<pre id="374a6138-38bb-489a-88db-3b9daf2fb450" class="code"><code>Half-Open, Stealth</code></pre><p id="f9f2bfe0-e5e8-4eb4-aad1-ed415723114e" class="">Can Nmap use a SYN scan without Sudo permissions (Y/N)?</p><pre id="24cf9ada-8869-4b52-8b64-4660d132de57" class="code"><code>N</code></pre></blockquote><hr id="cc54ec27-1b00-4f0c-a35c-86446e31c5b7"/><hr id="cc4f8924-fdf1-416b-90dc-753a8a49acfe"/><h2 id="23f256cb-54cb-440b-b43d-37c6359f29b0" class="">Task 7 → <mark class="highlight-teal">Scan Types</mark> UDP Scans</h2><p id="d2587ec0-0424-4ee6-8183-a1e3e37df6a5" class="">Unlike <em>TCP</em>, <em>UDP </em>connections are <em>stateless</em>.</p><p id="489c20bd-9406-4521-b0b5-dcb180aab440" class="">Scanning with  <code>nmap -sU --top-ports 20 &lt;target&gt;</code>. Will scan the top 20 most commonly used UDP ports, resulting in a much more acceptable scan time.</p><h3 id="f54d4e5b-5289-4bc2-99f8-22f0ca20e516" class="">Questions</h3><blockquote id="5c0234b2-ea1b-4213-91ca-9d6bc0083a04" class="">If a UDP port doesn&#x27;t respond to an Nmap scan, what will it be marked as?<pre id="46d8aaac-7807-467a-bb37-747994c50e50" class="code"><code>open|filtered</code></pre><p id="b7515377-9b26-4c0d-9306-df32f45a23c9" class="">When a UDP port is closed, by convention the target should send back a &quot;port unreachable&quot; message. Which protocol would it use to do so?</p><pre id="f423804f-d879-4076-90ee-8e088c7a5a24" class="code"><code>ICMP</code></pre></blockquote><hr id="9d6a3fa7-7bb0-4982-b1f1-4a1980556552"/><hr id="27dea2b3-e5e8-44ac-a2b4-d300f42f41a6"/><h2 id="a228196f-b8a6-4ce0-8901-8eb532acaf57" class="">Task 8 → <mark class="highlight-teal">Scan Types</mark> NULL, FIN and Xmas</h2><p id="8355f4bb-0ff8-4dc9-b195-b3d705d54cc0" class="">NULL, FIN and Xmas TCP port scans are less commonly used than any of the others we&#x27;ve covered already.</p><ul id="18b38418-388c-4e26-b807-e9b8dca5a5ff" class="bulleted-list"><li style="list-style-type:disc">As the name suggests, NULL scans (<code>-sN</code>) are when the TCP request is sent with no flags set at all. As per the RFC, the target host should respond with a RST if the port is closed.<figure id="e3441cee-0b4f-4721-a092-b8d13eef7cc2" class="image"><a href="img/ABCxAwf.png"><img style="width:1020px" src="img/ABCxAwf.png"/></a></figure></li></ul><ul id="991f52d2-dbb6-49d8-ae48-d9b8407a3847" class="bulleted-list"><li style="list-style-type:disc">FIN scans (<code>-sF</code>) work in an almost identical fashion; however, instead of sending a completely empty packet, a request is sent with the FIN flag (usually used to gracefully close an active connection). Once again, Nmap expects a RST if the port is closed.<figure id="2dbaf4c6-734e-4e0f-80c8-f7cd3e72a3e3" class="image"><a href="img/gIzKbEk.png"><img style="width:1017px" src="img/gIzKbEk.png"/></a></figure></li></ul><ul id="707d39d6-036b-4a2a-8656-c513316762af" class="bulleted-list"><li style="list-style-type:disc">As with the other two scans in this class, Xmas scans (<code>-sX</code>) send a malformed TCP packet and expects a RST response for closed ports. It&#x27;s referred to as an xmas scan as the flags that it sets (PSH, URG and FIN) give it the appearance of a blinking christmas tree when viewed as a packet capture in Wireshark.<figure id="9bf73971-6468-49c8-9f60-19f6a53ecf21" class="image"><a href="img/gKVkGug.png"><img style="width:1130px" src="img/gKVkGug.png"/></a></figure></li></ul><h3 id="433db340-c7c7-491c-87d6-8ec8741150c3" class="">Questions</h3><blockquote id="46bd88a5-5467-4185-af68-1765746c7176" class="">Which of the three shown scan types uses the URG flag?<pre id="13fdb7a0-0573-4e33-b0b6-eb7f217b6270" class="code"><code>Xmas</code></pre><p id="7fc33f6d-412a-4b06-973d-96fc364131e7" class="">Why are NULL, FIN and Xmas scans generally used?</p><pre id="248a0c94-5a24-49e6-9d92-b04aca3b672e" class="code"><code>firewall evasion</code></pre><p id="a2627fd0-b1c2-4975-b71d-e934347c5e28" class="">Which common OS may respond to a NULL, FIN or Xmas scan with a RST for every port?</p><pre id="7b133218-c263-458b-a9bb-360784f544dc" class="code"><code>Microsoft Windows</code></pre></blockquote><hr id="0da52ed9-6d45-41c8-bbb1-df5de1221190"/><hr id="1f82fdec-7109-4ae6-bbfd-02274e983ee9"/><h2 id="e77f18df-915b-47db-ab0c-39b442800839" class="">Task 9 → <mark class="highlight-teal">Scan Types</mark> ICMP Network Scanning</h2><p id="32ed441f-fb98-44d8-92be-180ebd4caa0e" class="">On first connection to a target network in a black box assignment, our first objective is to obtain a &quot;map&quot; of the network structure -- or, in other words, we want to see which IP addresses contain active hosts, and which do not.<div class="indented"><ul id="28f9e8f8-db49-472f-8c0b-6b947f808c35" class="bulleted-list"><li style="list-style-type:disc"> By using NMAP “<em>ping sweep</em>” we can achieve this, To perform the <em>ping sweep </em>we<em> </em>use <code>-sn</code> in conjuction with IP ranges specified with either a hypen <code>-</code> or CIDR notation <code>/</code></li></ul></div></p><h3 id="7549d6ed-4a6d-4e6d-bdb4-52e60d190621" class="">Questions</h3><blockquote id="871fef01-9acd-4bd6-aaf8-e9b78bed46f1" class="">How would you perform a ping sweep on the 172.16.x.x network (Netmask: 255.255.0.0) using Nmap? (CIDR notation)<pre id="f3bb11c2-7987-4a79-ba6f-0ca3f24153e1" class="code"><code>nmap -sn 172.16.0.0/16</code></pre><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="7cea43bc-6d4a-4d35-8a09-15fd253d82fe"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%"><mark class="highlight-teal_background"><strong>The CIDR notation uses a slash/then the number of bits that need to be turned on in the mask. So for a Class A it would be /8, for Class B it would be /16, and finally for a Class C it would be /24.</strong></mark></div></figure></blockquote><hr id="d73d8db5-09b1-44d6-91f7-27b820e8b5eb"/><hr id="f6567baa-a7cf-43c2-b80e-8a6036864453"/><h2 id="6e1f667b-ba3a-42d1-9ace-c5aab6e0eaa6" class="">Task 10 → <mark class="highlight-orange">NSE Scripts</mark> Overview</h2><p id="d10b9c76-7aaa-4550-8ce2-134e56e83366" class="">The <strong>N</strong>map <strong>S</strong>cripting <strong>E</strong>ngine (<strong>NSE</strong>) is an incredibly powerful addition to Nmap, extending its functionality quite considerably. NSE Scripts are written in the <em>Lua </em>programming language, and can be used to do a variety of things: from scanning for vulnerabilities, to automating exploits for them. The NSE is particularly useful for reconnaisance.<div class="indented"><p id="426372d5-2a59-49b4-a6a4-92f2bbe048d4" class=""><strong>Some useful Categories:</strong><div class="indented"><ul id="2395b432-74ed-4be8-8da9-4dbde984e7e2" class="bulleted-list"><li style="list-style-type:disc"><code>safe</code>:- Won&#x27;t affect the target</li></ul><ul id="d6f4cc2d-0c74-48bd-bcad-0098c7a46c92" class="bulleted-list"><li style="list-style-type:disc"><code>intrusive</code>:- Not safe: likely to affect the target</li></ul><ul id="bfca39e6-15ca-4c2f-ae11-73042f9678ff" class="bulleted-list"><li style="list-style-type:disc"><code>vuln</code>:- Scan for vulnerabilities</li></ul><ul id="73be7d9a-8736-474f-85cc-07b043aa28ae" class="bulleted-list"><li style="list-style-type:disc"><code>exploit</code>:- Attempt to exploit a vulnerability</li></ul><ul id="8d703127-6e88-47ce-8d49-82caac076e13" class="bulleted-list"><li style="list-style-type:disc"><code>auth</code>:- Attempt to bypass authentication for running services (e.g. Log into an FTP server anonymously)</li></ul><ul id="352416de-76d1-4df6-82aa-de4aa1f2924d" class="bulleted-list"><li style="list-style-type:disc"><code>brute</code>:- Attempt to bruteforce credentials for running services</li></ul><ul id="e63fcd22-02e7-4b48-a511-a0756cb3ee56" class="bulleted-list"><li style="list-style-type:disc"><code>discovery</code>:- Attempt to query running services for further information about the network (e.g. query an SNMP server).</li></ul></div></p></div></p><h3 id="e65f743d-3e19-4ee3-8b01-8d870434c740" class="">Questions</h3><blockquote id="f9452e00-7b68-4576-ab24-322ff06ee045" class="">What language are NSE scripts written in?<pre id="92c07601-95ab-45e1-9e9c-4541fc39e74f" class="code"><code>lua</code></pre><p id="241f0dbf-dcdc-45a0-accf-4e85abfa5250" class="">Which category of scripts would be a <em>very</em> bad idea to run in a production environment?</p><pre id="cb11d84e-4774-486d-aaf2-798ad20d6755" class="code"><code>intrusive</code></pre></blockquote><hr id="aa5fc4ad-de4f-475b-bdf3-12377b573b98"/><hr id="c3c01a2f-9b10-44ca-b03f-2de8e1bd5935"/><h2 id="850091c1-f078-4c6e-9ee0-02e13373d787" class="">Task 11 → <mark class="highlight-orange">NSE Scripts</mark> Working with the NSE</h2><p id="aaaf11c0-97a2-4171-9070-7655a5254860" class="">We looked briefly about <code>--script</code> switch the <code>vuln</code> category using <code>--script=vuln</code> . If the command <code>--script=safe</code> is run, then any applicable safe scripts will be run against the target</p><p id="381d020f-7762-4039-8e3e-5fb36e3d1eca" class="">To run a specific script, we would use <code>--script=&lt;script-name&gt;</code> , <div class="indented"><p id="7572074f-c136-431c-aabf-7e8a2dc3975c" class="">e.g. <code>--script=http-fileupload-exploiter</code>.</p></div></p><p id="66d6e497-1ebc-4765-b013-9e30cb8ad46c" class="">Multiple scripts can be run simultaneously in this fashion by separating them by a comma. <div class="indented"><p id="0dba07dd-e79a-42a9-87cd-2f6931b1425d" class="">For example: <code>--script=smb-enum-users,smb-enum-shares</code>.</p></div></p><p id="af4b0db5-cefb-472d-9c40-69a034886e19" class="">Some scripts require arguments. These can be given with the <code>--script-args</code> Nmap switch. An example of this would be with the <code>http-put</code> script (used to upload files using the PUT method). This takes two arguments: the URL to upload the file to, and the file&#x27;s location on disk.  <div class="indented"><p id="ab7c96ea-caa6-44d3-bc14-68f71828d083" class="">For example:<code>nmap -p 80 --script http-put --script-args http-put.url=&#x27;/dav/shell.php&#x27;,http-put.file=&#x27;./shell.php&#x27;</code></p></div></p><h3 id="c40971c2-97ec-4375-8231-a21fc17b8482" class="">Questions</h3><blockquote id="51d9d38e-50b7-4e51-9927-69a7b4c4a29b" class="">What optional argument can the <code>ftp-anon.nse</code> script take?<pre id="7359f074-c9fc-4b06-9a7f-8cd48d7e22c7" class="code"><code>maxlist</code></pre></blockquote><hr id="b5c98c47-d109-4ac7-a546-fc7fda19c9fc"/><hr id="20a2d513-c8b1-46c1-9480-ed2c28298fc5"/><h3 id="86ced6cd-52e2-4039-a317-ad43efab20f7" class="">Task 12 → <mark class="highlight-orange">NSE Scripts</mark> Searching for Scripts</h3><p id="3992cc29-b47c-400e-ae12-09320e4f359e" class="">We can search the script by two methods<div class="indented"><ul id="bbdcbb1b-3b5c-465e-bc7e-5cf72dabd39b" class="bulleted-list"><li style="list-style-type:disc"><strong>Nmap Website (</strong><strong><a href="https://nmap.org/nsedoc/">https://nmap.org/nsedoc/</a></strong><strong>)</strong></li></ul><ul id="dbc60b93-236b-41d1-b6c3-ed1b3f0d6805" class="bulleted-list"><li style="list-style-type:disc"><strong>Local storage</strong>  —&gt; Nmap stores its scripts on Linux at <code>/usr/share/nmap/scripts</code>. All of the NSE scripts are stored in this directory by default -- this is where Nmap)</li></ul></div></p><p id="f01ed4b4-b86d-424a-bae1-f296a82cad70" class="">Let us see an example of local storage script by using the <code>/usr/share/nmap/scripts/script.db</code> file. Despite the extension, this isn&#x27;t actually a database so much as a formatted text file containing filenames and categories for each available script.</p><figure id="f28daf1b-77a0-4efb-b3c3-142d38d4997a" class="image"><a href="img/Untitled.png"><img style="width:1245px" src="img/Untitled.png"/></a></figure><p id="10ac6aeb-08b8-4f1d-83a6-c66a51f3b7fc" class="">
+</p><p id="9a862639-6277-4252-a855-f8bcbca09401" class="">Nmap uses this file to keep track of (and utilise) scripts for the scripting engine; however, we can also <em>grep </em>through it to look for scripts. <div class="indented"><p id="a33a944f-480c-441b-87ed-e5c7450c0ab5" class="">For example: <code>grep &quot;ftp&quot; /usr/share/nmap/scripts/script.db</code>.</p></div></p><figure id="0f53a96c-27cf-4c04-95ea-e25d3c757c7f" class="image"><a href="img/Untitled%201.png"><img style="width:1457px" src="img/Untitled%201.png"/></a></figure><p id="9977cc16-1612-49aa-9392-08428f34324a" class="">
+</p><p id="59757bac-7cf9-46d2-b16e-4944263f4bcb" class="">The second way to search for scripts is quite simply to use the <code>ls</code> command. For example, we could get the same results as in the previous screenshot by using </p><p id="d2890f91-a13b-4d3b-9c65-ad1e8c22ac69" class=""><code>ls -l /usr/share/nmap/scripts/*ftp*</code>:</p><figure id="088d8bf6-fa87-4154-91e8-214c4a143a57" class="image"><a href="img/Untitled%202.png"><img style="width:1259px" src="img/Untitled%202.png"/></a></figure><p id="d452d5c7-8326-4671-a3f8-c5cc9a562ddd" class=""><em>Note the use of asterisks</em> (<code>*</code>) <em>on either side of the search term</em></p><p id="53886ea6-407d-4525-b36d-f0b02ec77c9f" class="">
+</p><p id="f0806c9c-2226-4971-847c-c16fee5ad9cc" class="">The same techniques can also be used to search for categories of script. For example:</p><p id="19f02a75-f541-48f8-af5a-c5f696d9919c" class=""><code>grep &quot;safe&quot; /usr/share/nmap/scripts/script.db</code></p><p id="f9deed0c-00ee-4ef7-8402-d9e32d770bdd" class="">
+</p><p id="d8030f34-4b03-468f-84dc-523d3aea5f19" class="">I<span style="border-bottom:0.05em solid"><em>nstalling New Scripts</em></span></p><p id="2c2c08c2-0b43-48ee-962d-da3fbb3838a7" class="">We mentioned previously that the Nmap website contains a list of scripts, so, what happens if one of these is missing in the <code>scripts</code> directory locally? A standard <code>sudo apt update &amp;&amp; sudo apt install nmap</code> should fix this; however, it&#x27;s also possible to install the scripts manually by downloading the script from Nmap (<code>sudo wget -O /usr/share/nmap/scripts/&lt;script-name&gt;.nse https://svn.nmap.org/nmap/scripts/&lt;script-name&gt;.nse</code>). This must then be followed up with <code>nmap --script-updatedb</code>, which updates the <code>script.db</code> file to contain the newly downloaded script.</p><h3 id="c8bd47dd-3186-4861-9fc6-f09cf4c73468" class="">Questions</h3><blockquote id="13f42342-6728-424f-aa66-6373f6e0f20b" class="">Search for &quot;smb&quot; scripts in the <code>/usr/share/nmap/scripts/</code> directory using either of the demonstrated methods.What is the filename of the script which determines the underlying OS of the SMB server?<pre id="0e437bec-5288-47b0-a443-cc21dfb05a83" class="code"><code>smb-os-discovery.nse</code></pre><p id="574d7ff6-0de1-41f5-a935-3cd1cfc86e26" class="">Read through this script. What does it depend on?</p><pre id="cf8a2a19-35ab-4044-b4e7-c84cddbfebd6" class="code"><code>smb-brute</code></pre></blockquote><hr id="f5bf2337-4a3b-4e2c-83fd-8c7f6b32cab6"/><hr id="783ba938-bae9-454a-a961-740f4f52e891"/><h3 id="4a33e8f0-c51d-4cc6-a0e2-d6d6820f5945" class="">Task 13 → Firewall Evasion</h3><p id="4cd334a9-bfa1-4ea8-bed6-20d7325df9c4" class="">The following switches are of particular note:</p><ul id="1c7936a1-68e3-47b0-b201-15e013d0e7df" class="bulleted-list"><li style="list-style-type:disc"><code>f</code>:- Used to fragment the packets (i.e. split them into smaller pieces) making it less likely that the packets will be detected by a firewall or IDS.</li></ul><ul id="1140bd4a-ef0f-4280-b771-22d43c777cec" class="bulleted-list"><li style="list-style-type:disc">An alternative to <code>f</code>, but providing more control over the size of the packets: <code>-mtu &lt;number&gt;</code>, accepts a maximum transmission unit size to use for the packets sent. This <em>must</em> be a multiple of 8.</li></ul><ul id="f6ae6184-617a-4f05-9a19-1e10a90b08bc" class="bulleted-list"><li style="list-style-type:disc"><code>-scan-delay &lt;time&gt;ms</code>:- used to add a delay between packets sent. This is very useful if the network is unstable, but also for evading any time-based firewall/IDS triggers which may be in place.</li></ul><ul id="77dfbad4-634f-464f-923e-4570760da5ba" class="bulleted-list"><li style="list-style-type:disc"><code>-badsum</code>:- this is used to generate in invalid checksum for packets. Any real TCP/IP stack would drop this packet, however, firewalls may potentially respond automatically, without bothering to check the checksum of the packet. As such, this switch can be used to determine the presence of a firewall/IDS.</li></ul><h3 id="d713d74d-62d2-45fe-bc70-187721bc3483" class="">Questions</h3><p id="25997bb7-10b5-422d-b0bc-52a755baeceb" class="">Which simple (and frequently relied upon) protocol is often blocked, requiring the use of the <code>-Pn</code> switch?</p><pre id="08ff60a6-7011-4411-abd0-7d73cff94602" class="code"><code>ICMP</code></pre><p id="7cdf9114-25fb-4e7c-9ba2-e2a1a08d04f0" class=""><strong>[Research]</strong> Which Nmap switch allows you to append an arbitrary length of random data to the end of packets?</p><pre id="4719ea8a-d2e4-4ae6-8ac9-999b6c2b05c8" class="code"><code>--data-lenght</code></pre><hr id="f83fafa7-84ac-4b3f-87df-0d2007069ff4"/><hr id="ede8705d-d033-4557-a507-e8caead26a17"/><h2 id="bbfe3d19-0299-4856-b589-09a0cef1dbe4" class="">Task 14 → Practical</h2><h3 id="13c9fb43-a183-49d4-88c7-e4e945637870" class="">Questions</h3><blockquote id="851917dd-2c1e-4962-98e0-a738ba60f3c4" class="">Does the target (<code>10.10.44.130</code>)respond to ICMP (ping) requests (Y/N)?<figure id="ec8f57cb-286f-49b0-8ef2-60d6d874a5fa" class="image"><a href="img/Untitled%203.png"><img style="width:1171px" src="img/Untitled%203.png"/></a></figure><pre id="a97b17ee-b227-4ce4-b7ff-950aa53c0fae" class="code"><code>N</code></pre><p id="dd2b2e31-7222-4640-aaa4-f9f9ab116da4" class="">Perform an Xmas scan on the first 999 ports of the target -- how many ports are shown to be open or filtered?</p><figure id="46973092-301c-46ba-b780-70e08419de24" class="image"><a href="img/Untitled%204.png"><img style="width:1037px" src="img/Untitled%204.png"/></a></figure><pre id="91482bf1-a4aa-407d-9cb5-c9ff03334cc3" class="code"><code>999</code></pre><p id="c4009473-b304-4bb4-bd73-9a3c5aa64446" class="">There is a reason given for this -- what is it?</p><p id="95efc9cf-9547-4408-b351-74582b404b8f" class=""><strong>Note:</strong> The answer will be in your scan results. Think carefully about which switches to use -- and read the hint before asking for help!</p><pre id="7764884e-e38d-4b88-827b-0eef41fae0b1" class="code"><code>No response</code></pre><p id="26895863-1078-44c2-a6bd-6341be74071b" class="">Hint</p><p id="fbf86ff4-5bfc-45ed-a313-69dcfa02cb85" class="">Perform a TCP SYN scan on the first 5000 ports of the target -- how many ports are shown to be open?</p><figure id="5fe8e746-3d8f-44a5-88bf-4bc4652c6b9d" class="image"><a href="img/Untitled%205.png"><img style="width:984px" src="img/Untitled%205.png"/></a></figure><pre id="bd787bfd-6572-4b78-82ef-3061a803bf0d" class="code"><code>5</code></pre><p id="58eae758-a25a-4d0d-ac03-17c98c57fbe0" class="">
+</p><p id="adbb450a-421a-499b-b1e2-44bc6a44183f" class="">Deploy the <code>ftp-anon</code> script against the box. Can Nmap login successfully to the FTP server on port 21? (Y/N)</p><figure id="733be18f-7e65-41e2-8bd6-ec82e5953ba8" class="image"><a href="img/Untitled%206.png"><img style="width:824px" src="img/Untitled%206.png"/></a></figure><pre id="c9c7aaed-c162-4e2a-b4e1-6654e9c281e1" class="code"><code>Y</code></pre></blockquote><hr id="ad12bf41-36ef-40dd-8c25-9fe56b2d4e12"/><hr id="ab8544d0-bf3f-4e61-a483-a4566d2b33e6"/><h2 id="f96817e8-f826-4d6b-ab1e-53c0c093faac" class="">Task 15 → Conclusion</h2><p id="96ef74d7-4a50-4975-b07e-5ffa007ef347" class="">We have successfully completed the NMAP room
+<div class="indented"><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="fbbe8925-c9db-45a0-91d3-62af83c9eaae"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%">For further details about NMAP  you can refer this docs (<a href="https://nmap.org/book/">https://nmap.org/book/</a>)</div></figure></div></p></div></article></body></html>
